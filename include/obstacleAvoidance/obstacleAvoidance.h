@@ -8,6 +8,7 @@
 #include <std_msgs/Int16MultiArray.h>
 #include<stereo_msgs/DisparityImage.h>
 #include <opencv2/opencv.hpp>
+#include <dji_sdk/LocalPosition.h>
 using namespace std;
 class ObstacleAvoidance
 {
@@ -17,6 +18,7 @@ public:
 	ros::Publisher hokuyo_data_pub;
 	ros::Publisher guidance_data_pub;
 	//--wxd--
+	ros::Subscriber quadrotorPosNED_sub;
 	ros::Subscriber obstacle_distance_sub;
 	ros::Subscriber obstacle_disparity_sub;
 	sensor_msgs::LaserScan laserScan_msg;
@@ -39,6 +41,10 @@ public:
 	void LaserScanCallback(const sensor_msgs::LaserScanConstPtr& msg);
 	void guidanceObstacleCallback(const sensor_msgs::LaserScanConstPtr& g_oa);
 	void guidancePointsCallback(const sensor_msgs::ImageConstPtr& disparity_img);
+	void quadrotorPosNEDCallback(const dji_sdk::LocalPosition::ConstPtr &msg);
+	//-whd- test
+	float Object_N,Object_E;
+	dji_sdk::LocalPosition quadrotorPosNED;
 };
 enum obstacle_state {none, guidance, hokuyo, hokuyo_and_guidance};
 struct guidances{
