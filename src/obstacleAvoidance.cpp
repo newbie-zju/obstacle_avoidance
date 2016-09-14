@@ -129,16 +129,15 @@ void ObstacleAvoidance::quadrotorPosNEDCallback(const dji_sdk::LocalPosition::Co
 	quadrotorPosNED.y = msg->y;
 	quadrotorPosNED.z = msg->z;
 	obstacle_avoidance::Hokuyo hokuyo_data;
-	hokuyo_data.number = 1;
+	hokuyo_data.number = 0;
 	hokuyo_data.ranges.resize(5);
 	hokuyo_data.angles.resize(5);
 	for(int i=0;i<5;i++)
 	{
-		hokuyo_data.ranges[0] = 999;
-		hokuyo_data.angles[0] = 999;
+		hokuyo_data.ranges[i] = 999;
+		hokuyo_data.angles[i] = 999;
 	}
-	Object_N = 2.5;
-	Object_E = 5.0;
+	//ROS_INFO("OB: %3.1f,%3.1f",Object_N, Object_E);
 	float range = sqrt((Object_N - quadrotorPosNED.x)*(Object_N - quadrotorPosNED.x)+(Object_E - quadrotorPosNED.y)*(Object_E - quadrotorPosNED.y));
 	float angle = 3.1415926 - atan2((Object_E - quadrotorPosNED.y),(Object_N - quadrotorPosNED.x));
 	if (range <3.0)
@@ -222,11 +221,14 @@ void ObstacleAvoidance::guidancePointsCallback(const sensor_msgs::ImageConstPtr&
 	//model.projectDisparityImageTo3d(dmat, dense_points_, true);
 	
 }
-ObstacleAvoidance::ObstacleAvoidance(ros::NodeHandle nh):nh_(nh)
+ObstacleAvoidance::ObstacleAvoidance(ros::NodeHandle nh):nh_(nh),nh_param("~")
 {
+	if(!nh_param.getParam("Object_N", Object_N))Object_N = 10.0;
+	if(!nh_param.getParam("Object_E", Object_E))Object_E = 2.0;
 	laserAng.clear();
 	laserRange.clear();
 	initSubscriber();
+
 }
 
 ObstacleAvoidance::~ObstacleAvoidance()
@@ -242,5 +244,4 @@ void ObstacleAvoidance::initSubscriber()
 	quadrotorPosNED_sub = nh_.subscribe("/dji_sdk/local_position", 10, &ObstacleAvoidance::quadrotorPosNEDCallback, this);
 	hokuyo_data_pub = nh_.advertise<obstacle_avoidance::Hokuyo>("/hokuyo/obstacle_data", 10);
 	guidance_data_pub = nh_.advertise<obstacle_avoidance::Hokuyo>("/guidance/obstacle_data", 10);
-	ros::spin();
 } 

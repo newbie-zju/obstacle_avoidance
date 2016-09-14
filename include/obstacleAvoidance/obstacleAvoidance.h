@@ -14,6 +14,7 @@ class ObstacleAvoidance
 {
 public:
 	ros::NodeHandle nh_;
+	ros::NodeHandle nh_param;
 	ros::Subscriber laserScan_sub;
 	ros::Publisher hokuyo_data_pub;
 	ros::Publisher guidance_data_pub;
@@ -43,7 +44,7 @@ public:
 	void guidancePointsCallback(const sensor_msgs::ImageConstPtr& disparity_img);
 	void quadrotorPosNEDCallback(const dji_sdk::LocalPosition::ConstPtr &msg);
 	//-whd- test
-	float Object_N,Object_E;
+	double Object_N,Object_E;
 	dji_sdk::LocalPosition quadrotorPosNED;
 };
 enum obstacle_state {none, guidance, hokuyo, hokuyo_and_guidance};
