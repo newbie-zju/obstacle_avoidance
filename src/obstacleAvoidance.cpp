@@ -113,10 +113,11 @@ void ObstacleAvoidance::LaserScanCallback(const sensor_msgs::LaserScanConstPtr& 
 		}
 		//ROS_INFO("number %d",hokuyo_data.number);
 		//-whd-for test
-		hokuyo_data.number = 1;
-		hokuyo_data.ranges[0] = 1.5;
-		hokuyo_data.angles[0] = 3.1415926/2.0;
-		//hokuyo_data_pub.publish(hokuyo_data);
+		//hokuyo_data.number = 1;
+		//hokuyo_data.ranges[0] = 1.5;
+		//hokuyo_data.angles[0] = 3.1415926/2.0;
+		//ROS_ERROR("OB HAHA");
+		hokuyo_data_pub.publish(hokuyo_data);
 	}
 	else
 		//ROS_INFO("whd_test3");
@@ -146,7 +147,7 @@ void ObstacleAvoidance::quadrotorPosNEDCallback(const dji_sdk::LocalPosition::Co
 		hokuyo_data.ranges[0] = range;
 		hokuyo_data.angles[0] = angle;
 	}
-	hokuyo_data_pub.publish(hokuyo_data);
+	//hokuyo_data_pub.publish(hokuyo_data);
 
 }
 
